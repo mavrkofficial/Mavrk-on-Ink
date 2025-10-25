@@ -238,9 +238,9 @@ For partnerships, marketing, or integration inquiries:
 - **Documentation**: See `docs/` directory
 - **Ink Network**: [inkchain.com](https://inkchain.com)
 
-## ⚠️ Disclaimer
+## ⚠️ Legal
 
-This platform is for educational and experimental purposes only. Token creation and trading involve significant risks. Always do your own research before investing. The team is not responsible for any financial losses.
+Users must reference our [Terms and Conditions](https://www.mavrk.ink/docs/terms-and-conditions) before using the platform.
 
 ---
 
