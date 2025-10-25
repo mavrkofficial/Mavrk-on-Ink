@@ -52,9 +52,8 @@ This document provides the current contract addresses for the Mavrk.ink platform
 - Fee collection integration
 - Slippage protection
 
-### 💰 **Fee Collection Wallet**
-**Address**: `0x5B4230b8F8D0dA9307cb995801d886189a31EEA7`
-**Purpose**: Collects platform fees from trading
+### 💰 **Fee Collection System**
+**Purpose**: Collects and distributes platform fees from trading
 **Fee Structure**:
 - **75% Platform Fees**: Supports platform development
 - **25% Creator Earnings**: Distributed to token creators

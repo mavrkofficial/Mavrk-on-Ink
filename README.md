@@ -76,14 +76,13 @@ mavrk.ink/
 **Features**:
 - Permanently locks LP position NFTs
 - Collects trading fees from Uniswap V3 positions
-- Distributes fees: 40% Mavrk, 40% Ink, 20% Creator
+- Distributes fees: 75% Mavrk, 25% Creator
 - Tracks all locked LP positions
 - Creator-based fee collection
 
 **Fee Distribution**:
-- **40%** to Mavrk platform wallet
-- **40%** to Ink network wallet
-- **20%** to token creator
+- **75%** to Mavrk platform wallet
+- **25%** to token creator earnings
 
 ## 🌐 Network Configuration
 
@@ -195,8 +194,8 @@ All contracts use OpenZeppelin security standards with reentrancy protection, in
 
 1. **Trading Occurs**: Users trade tokens on Uniswap V3
 2. **Fees Accumulate**: Trading fees accumulate in LP position
-3. **Collection Trigger**: Fee wallets or creators collect fees
-4. **Distribution**: Fees split 40/40/20 automatically
+3. **Collection Trigger**: Creators collect fees
+4. **Distribution**: Fees split 75/25 automatically (75% Mavrk, 25% Creator)
 5. **Withdrawal**: Recipients receive their share
 
 ### Bridge Flow
