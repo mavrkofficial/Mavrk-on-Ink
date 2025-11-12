@@ -1,0 +1,54 @@
+{
+  "name": "@mavrk/sdk",
+  "version": "1.0.0",
+  "description": "Official SDK for Mavrk.ink - Deploy tokens, manage liquidity, and integrate with the Mavrk platform on Ink L2",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mavrkofficial/Mavrk-on-Ink"
+  },
+  "keywords": [
+    "mavrk",
+    "ink",
+    "ethereum",
+    "l2",
+    "defi",
+    "sdk",
+    "tokens",
+    "liquidity",
+    "uniswap",
+    "evm"
+  ],
+  "author": "Mavrk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mavrkofficial/Mavrk-on-Ink/issues"
+  },
+  "homepage": "https://mavrk.ink",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.0"
+  },
+  "peerDependencies": {
+    "ethers": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
