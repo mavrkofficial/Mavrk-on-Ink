@@ -217,10 +217,10 @@ Currently supports **Ink L2** (Chain ID: 57073)
 ## Links
 
 - Website: [https://mavrk.ink](https://mavrk.ink)
-- Documentation: [https://docs.mavrk.ink](https://docs.mavrk.ink)
+- Documentation: [https://mavrk.ink/docs](https://mavrk.ink/docs)
 - Twitter: [@mavrkofficial](https://twitter.com/mavrkofficial)
 - Telegram: [t.me/mavrkofficialannouncements](https://t.me/mavrkofficialannouncements)
-- GitHub: [github.com/mavrkofficial](https://github.com/mavrkofficial)
+- GitHub: [github.com/mavrkofficial/Mavrk-on_Ink](https://github.com/mavrkofficial/Mavrk-on-Ink)
 
 ## Support
 
