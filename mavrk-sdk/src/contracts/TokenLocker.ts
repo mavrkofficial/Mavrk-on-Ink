@@ -21,7 +21,7 @@ export class TokenLocker {
   }
 
   /**
-   * Lock tokens for a specified duration
+   * Lock tokens for a specified duration (in days)
    * @param tokenAddress - ERC20 token to lock
    * @param amount - Amount to lock (in wei)
    * @param durationDays - Lock duration in days
@@ -53,15 +53,8 @@ export class TokenLocker {
         console.log('✅ Tokens approved');
       }
 
-      // Convert days to seconds
-      const durationSeconds = durationDays * 24 * 60 * 60;
-
-      // Lock tokens
-      const tx = await this.contract.lock(
-        tokenAddress,
-        amount,
-        durationSeconds
-      );
+      // Create token lock (duration in days as per contract)
+      const tx = await this.contract.newTokenLock(tokenAddress, amount, durationDays);
 
       console.log(`⏳ Lock transaction sent: ${tx.hash}`);
       const receipt = await tx.wait();
@@ -75,10 +68,19 @@ export class TokenLocker {
   }
 
   /**
-   * Unlock tokens after lock period expires
+   * Withdraw a specific token lock after it expires
    */
-  async unlock(tokenAddress: string, lockIndex: number): Promise<string> {
-    const tx = await this.contract.unlock(tokenAddress, lockIndex);
+  async withdraw(lockId: number): Promise<string> {
+    const tx = await this.contract.withdrawTokenLock(lockId);
+    const receipt = await tx.wait();
+    return receipt.hash;
+  }
+
+  /**
+   * Withdraw all unlocked locks for a token
+   */
+  async withdrawAll(tokenAddress: string): Promise<string> {
+    const tx = await this.contract.withdrawAllTokenLocks(tokenAddress);
     const receipt = await tx.wait();
     return receipt.hash;
   }
@@ -86,15 +88,15 @@ export class TokenLocker {
   /**
    * Get all locks for a user and token
    */
-  async getUserLocks(userAddress: string, tokenAddress: string) {
-    return await this.contract.getUserLocks(userAddress, tokenAddress);
+  async getActiveLocks(userAddress: string, tokenAddress: string) {
+    return await this.contract.getActiveLocks(userAddress, tokenAddress);
   }
 
   /**
-   * Get all locks for a specific token
+   * Get lock info for a specific lock
    */
-  async getTokenLocks(tokenAddress: string) {
-    return await this.contract.getTokenLocks(tokenAddress);
+  async getLockInfo(userAddress: string, lockId: number) {
+    return await this.contract.getLockInfo(userAddress, lockId);
   }
 }
 

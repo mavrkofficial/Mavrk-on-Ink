@@ -19,26 +19,26 @@ export class TokenFactory {
   }
 
   /**
-   * Deploy a new Mavrk token with automatic liquidity pool
+   * Deploy a new Mavrk token with automatic liquidity pool on a chosen DEX
    * @param name - Token name
    * @param symbol - Token symbol
-   * @param poolManagerTier - 1 (1 ETH), 2 (2 ETH), or 3 (3 ETH) liquidity
+   * @param npm - NonfungiblePositionManager address (selects the target DEX)
    * @returns Deployment result with token address and transaction hash
    */
   async deployToken(
     name: string,
     symbol: string,
-    poolManagerTier: 1 | 2 | 3
+    npm: string
   ): Promise<DeployTokenResult> {
     try {
       console.log(`🚀 Deploying token: ${name} (${symbol})`);
-      console.log(`💧 Liquidity tier: ${poolManagerTier} ETH`);
+      console.log(`🔁 Using NPM (DEX): ${npm}`);
 
       // Send transaction
       const tx: TransactionResponse = await this.contract.newMavrkToken(
         name,
         symbol,
-        poolManagerTier
+        npm
       );
 
       console.log(`⏳ Transaction sent: ${tx.hash}`);
@@ -88,25 +88,31 @@ export class TokenFactory {
     }
   }
 
-  /**
-   * Get pool manager address for a specific tier
-   */
-  async getPoolManager(tier: 1 | 2 | 3): Promise<string> {
-    return await this.contract.poolManagers(tier);
+  // -------- Views --------
+  async getWhitelistedNPMs(): Promise<string[]> {
+    return await this.contract.getWhitelistedNPMs();
+  }
+
+  async isNPMWhitelisted(npm: string): Promise<boolean> {
+    return await this.contract.isNPMWhitelisted(npm);
+  }
+
+  async getV3FactoryForNPM(npm: string): Promise<string> {
+    return await this.contract.getV3FactoryForNPM(npm);
   }
 
   /**
    * Get creator address for an NFT token ID
    */
   async getNFTCreator(tokenId: bigint): Promise<string> {
-    return await this.contract.nftCreators(tokenId);
+    return await this.contract.getNFTCreator(tokenId);
   }
 
   /**
    * Get all NFT token IDs owned by a creator
    */
   async getCreatorNFTs(creator: string): Promise<bigint[]> {
-    return await this.contract.creatorNFTs(creator);
+    return await this.contract.getCreatorNFTs(creator);
   }
 }
 

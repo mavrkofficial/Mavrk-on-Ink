@@ -17,7 +17,7 @@ async function main() {
   const amountToLock = ethers.parseEther('1000'); // 1000 tokens
   const lockDurationDays = 30; // 30 days
 
-  console.log('🔒 Locking tokens...');
+  console.log('Locking tokens...');
   console.log(`Token: ${tokenAddress}`);
   console.log(`Amount: ${ethers.formatEther(amountToLock)} tokens`);
   console.log(`Duration: ${lockDurationDays} days`);
@@ -29,20 +29,17 @@ async function main() {
     durationDays: lockDurationDays,
   });
 
-  console.log(`✅ Tokens locked successfully!`);
-  console.log(`🔗 Transaction: ${txHash}`);
+  console.log(`Tokens locked successfully!`);
+  console.log(`Transaction: ${txHash}`);
 
   // Get user's locks
   const userAddress = await wallet.getAddress();
-  const locks = await mavrk.tokenLocker.getUserLocks(userAddress, tokenAddress);
+  const { lockIds, amounts, endTimes } = await mavrk.tokenLocker.getActiveLocks(userAddress, tokenAddress);
   
-  console.log(`\n📊 Your locks for this token:`);
-  locks.forEach((lock: any, index: number) => {
-    const unlockDate = new Date(Number(lock.unlockTime) * 1000);
-    console.log(`Lock ${index + 1}:`);
-    console.log(`  Amount: ${ethers.formatEther(lock.amount)} tokens`);
-    console.log(`  Unlock time: ${unlockDate.toLocaleString()}`);
-    console.log(`  Withdrawn: ${lock.withdrawn ? 'Yes' : 'No'}`);
+  console.log(`\nYour active locks for this token:`);
+  lockIds.forEach((id: bigint, index: number) => {
+    const unlockDate = new Date(Number(endTimes[index]) * 1000);
+    console.log(`Lock ${id}: ${ethers.formatEther(amounts[index])} tokens, unlocks at ${unlockDate.toLocaleString()}`);
   });
 }
 

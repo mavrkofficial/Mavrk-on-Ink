@@ -6,7 +6,6 @@ import { Contract, Signer } from 'ethers';
 import { LINEAR_VESTING_ABI } from '../abis/LinearVesting';
 import { ERC20_ABI } from '../abis/ERC20';
 import { CONTRACT_ADDRESSES } from '../constants';
-import { VestingParams } from '../types';
 
 export class LinearVesting {
   private contract: Contract;
@@ -22,39 +21,33 @@ export class LinearVesting {
   }
 
   /**
-   * Create a linear vesting schedule
+   * Create a linear vesting schedule using preset options (1=30d,2=60d,3=90d,4=180d)
+   * Approves token if needed.
    */
-  async createVesting(params: VestingParams): Promise<string> {
+  async createVesting(tokenAddress: string, amount: bigint, vestingOption: 1 | 2 | 3 | 4): Promise<string> {
     try {
-      console.log(`📅 Creating vesting schedule for ${params.beneficiary}`);
+      console.log(`📅 Creating vesting schedule option ${vestingOption}`);
 
       // Check allowance
-      const tokenContract = new Contract(params.tokenAddress, ERC20_ABI, this.signer);
+      const tokenContract = new Contract(tokenAddress, ERC20_ABI, this.signer);
       const allowance = await tokenContract.allowance(
         await this.signer.getAddress(),
         CONTRACT_ADDRESSES.LINEAR_VESTING
       );
 
       // Approve if needed
-      if (allowance < params.amount) {
+      if (allowance < amount) {
         console.log('⏳ Approving token spending...');
         const approveTx = await tokenContract.approve(
           CONTRACT_ADDRESSES.LINEAR_VESTING,
-          params.amount
+          amount
         );
         await approveTx.wait();
         console.log('✅ Tokens approved');
       }
 
       // Create vesting schedule
-      const tx = await this.contract.createVestingSchedule(
-        params.beneficiary,
-        params.tokenAddress,
-        params.amount,
-        params.startTime,
-        params.cliffDuration,
-        params.vestingDuration
-      );
+      const tx = await this.contract.createVestingSchedule(tokenAddress, amount, vestingOption);
 
       console.log(`⏳ Vesting transaction sent: ${tx.hash}`);
       const receipt = await tx.wait();
@@ -68,26 +61,26 @@ export class LinearVesting {
   }
 
   /**
-   * Release vested tokens
+   * Claim all currently vested tokens for a vesting schedule
    */
-  async release(tokenAddress: string): Promise<string> {
-    const tx = await this.contract.release(tokenAddress);
+  async claim(vestingId: number): Promise<string> {
+    const tx = await this.contract.claimVestedTokens(vestingId);
     const receipt = await tx.wait();
     return receipt.hash;
   }
 
   /**
-   * Get vesting schedule for a beneficiary
+   * Get vesting info for a vesting schedule
    */
-  async getVestingSchedule(beneficiary: string, tokenAddress: string) {
-    return await this.contract.getVestingSchedule(beneficiary, tokenAddress);
+  async getVestingInfo(userAddress: string, vestingId: number) {
+    return await this.contract.getVestingInfo(userAddress, vestingId);
   }
 
   /**
-   * Compute amount of tokens that can be released
+   * Compute amount of tokens that can be claimed now
    */
-  async getReleasableAmount(beneficiary: string, tokenAddress: string): Promise<bigint> {
-    return await this.contract.computeReleasableAmount(beneficiary, tokenAddress);
+  async getClaimableAmount(userAddress: string, vestingId: number): Promise<bigint> {
+    return await this.contract.getClaimableAmount(userAddress, vestingId);
   }
 }
 

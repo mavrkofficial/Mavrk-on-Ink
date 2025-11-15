@@ -3,11 +3,15 @@
  */
 
 export const TOKEN_LOCKER_ABI = [
-  "function lock(address _token, uint256 _amount, uint256 _duration) external",
-  "function unlock(address _token, uint256 _lockIndex) external",
-  "function getUserLocks(address _user, address _token) external view returns (tuple(uint256 amount, uint256 lockTime, uint256 unlockTime, bool withdrawn)[])",
-  "function getTokenLocks(address _token) external view returns (tuple(address user, uint256 amount, uint256 lockTime, uint256 unlockTime, bool withdrawn)[])",
-  "event TokensLocked(address indexed user, address indexed token, uint256 amount, uint256 unlockTime)",
-  "event TokensUnlocked(address indexed user, address indexed token, uint256 amount)"
+  "function newTokenLock(address _tokenAddress, uint256 _tokenAmount, uint256 _lockDays) external returns (uint256)",
+  "function withdrawTokenLock(uint256 _lockId) external",
+  "function withdrawAllTokenLocks(address _tokenAddress) external",
+  "function getLockInfo(address _user, uint256 _lockId) external view returns (address tokenAddress, uint256 tokenAmount, uint256 lockDays, uint256 daysRemaining, bool isUnlocked, bool withdrawn)",
+  "function getDaysRemaining(address _user, uint256 _lockId) external view returns (uint256)",
+  "function getUserLockIds(address _user) external view returns (uint256[])",
+  "function getUserLockCount(address _user) external view returns (uint256)",
+  "function getActiveLocks(address _user, address _tokenAddress) external view returns (uint256[] lockIds, uint256[] amounts, uint256[] endTimes)",
+  "event TokenLockCreated(address indexed user, uint256 indexed lockId, address indexed tokenAddress, uint256 tokenAmount, uint256 lockDays, uint256 lockEndTime)",
+  "event TokensWithdrawn(address indexed user, uint256 indexed lockId, address indexed tokenAddress, uint256 tokenAmount)"
 ] as const;
 

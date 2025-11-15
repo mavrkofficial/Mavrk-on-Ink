@@ -1,18 +1,17 @@
 # Mavrk SDK - Quick Start
 
-## 📋 What You Have
+## What You Have
 
-A complete, production-ready SDK in the `mavrk-sdk/` folder that includes:
+A focused SDK in the `mavrk-sdk/` folder that includes:
 
-✅ Full TypeScript implementation  
-✅ Contract wrappers for all Mavrk contracts  
-✅ Supabase integration for metadata  
-✅ Utility functions (formatting, validation, prices)  
-✅ Working examples  
-✅ Documentation  
-✅ Publishing guides  
+- Full TypeScript implementation  
+- Contract wrappers for TokenFactory, TokenLocker, LinearVesting  
+- Utility functions (formatting, validation)  
+- Working examples  
+- Documentation  
+- Publishing guides  
 
-## 🚀 Next Steps
+## Next Steps
 
 ### 1. Copy to Your Public Repo
 
@@ -70,9 +69,6 @@ async function main() {
   const wallet = ethers.Wallet.createRandom().connect(provider);
   const sdk = new MavrkSDK({ signer: wallet });
   console.log('SDK initialized successfully!');
-  
-  const tokens = await sdk.getAllTokens(5);
-  console.log(`Found ${tokens.length} tokens`);
 }
 
 main();
@@ -102,14 +98,14 @@ Developers can now install it:
 npm install @mavrk/sdk
 ```
 
-## 📚 Documentation
+## Documentation
 
 - **README.md** - Main documentation (shows on npm)
 - **PUBLISHING.md** - How to publish updates
 - **DEVELOPMENT.md** - Development workflow
 - **examples/** - Working code examples
 
-## 🔧 Updating the SDK
+## Updating the SDK
 
 When you make changes:
 
@@ -145,13 +141,7 @@ const sdk = new MavrkSDK({ signer: wallet });
 const result = await sdk.deployToken({
   name: 'My Token',
   symbol: 'MTK',
-  // poolManagerTier defaults to 1
-  metadata: {
-    logoBase64: 'data:image/png;base64,...',      // Required
-    coverPhotoBase64: 'data:image/png;base64,...', // Required
-    category: 'Utility',                           // Required
-    description: 'My awesome token'
-  }
+  npm: '0xNonFungiblePositionManager...'
 });
 
 // Lock tokens
@@ -160,21 +150,15 @@ await sdk.lockTokens({
   amount: ethers.parseEther('1000'),
   durationDays: 30
 });
-
-// Query data
-const tokens = await sdk.getAllTokens();
-const price = await sdk.getTokenPrice(tokenAddress);
-const tvl = await sdk.getTotalTVL();
 ```
 
-## 🌟 What Makes This Special
+## What Makes This Special
 
 1. **Plug & Play** - Developers can integrate Mavrk in minutes
-2. **Full Featured** - Deploy, lock, vest, query - everything works
+2. **Focused** - Deploy, lock, vest - the essentials only
 3. **Type Safe** - Full TypeScript support
 4. **Well Documented** - Examples and guides included
-5. **Supabase Ready** - Automatic metadata storage
-6. **Production Ready** - Error handling, validation, logging
+5. **Production Ready** - Error handling, validation, logging
 
 ## 📊 After Publishing
 
@@ -189,14 +173,14 @@ You can promote it:
 - Share in Discord/Telegram
 - Add "Built with Mavrk SDK" badge for users
 
-## 🆘 Need Help?
+## Need Help?
 
 See:
 - `PUBLISHING.md` for publishing questions
 - `DEVELOPMENT.md` for development questions
 - `examples/` for code examples
 
-## 📝 Customization
+## Customization
 
 Feel free to:
 - Update branding in README

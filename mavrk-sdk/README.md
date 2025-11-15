@@ -7,13 +7,10 @@ Official TypeScript SDK for integrating with [Mavrk.ink](https://mavrk.ink) - Th
 
 ## Features
 
-✅ **Token Deployment** - Deploy ERC-20 tokens with automatic liquidity pools  
-✅ **Token Locking** - Time-lock tokens for custom durations  
-✅ **Vesting Schedules** - Create linear vesting schedules  
-✅ **Data Integration** - Store and retrieve token metadata from Supabase  
-✅ **Price Queries** - Get real-time token prices via Relay Protocol  
-✅ **TVL Queries** - Query total value locked across the platform  
-✅ **Type Safety** - Full TypeScript support with detailed types  
+- Token Deployment - Deploy ERC-20 tokens with automatic liquidity pools (choose DEX via NPM)  
+- Token Locking - Time-lock tokens for custom durations  
+- Vesting Schedules - Create linear vesting schedules  
+- Type Safety - Full TypeScript support with detailed types  
 
 ## Installation
 
@@ -43,26 +40,14 @@ const mavrk = new MavrkSDK({
   chainId: 57073 // Ink L2
 });
 
-// Deploy a token (poolManagerTier defaults to 1)
+// Deploy a token on a chosen DEX by providing its NPM address
 const result = await mavrk.deployToken({
   name: 'My Token',
   symbol: 'MTK',
-  metadata: {
-    logoBase64: 'data:image/png;base64,...',      // Required
-    coverPhotoBase64: 'data:image/png;base64,...', // Required
-    category: 'Utility',                           // Required
-    description: 'My awesome token',
-    website: 'https://mytoken.com',
-    twitter: 'mytoken'
-  }
+  npm: '0xNonFungiblePositionManager...' // target DEX NPM address
 });
 
 console.log('Token deployed:', result.tokenAddress);
-console.log('Pool created:', result.poolAddress);
-
-// Get token data
-const token = await mavrk.getToken(result.tokenAddress);
-console.log('Token info:', token);
 
 // Lock tokens
 await mavrk.lockTokens({
@@ -80,9 +65,7 @@ await mavrk.lockTokens({
 interface MavrkSDKConfig {
   signer: ethers.Signer;          // Your wallet signer
   chainId?: number;                // Default: 57073 (Ink L2)
-  rpcUrl?: string;                 // Custom RPC URL
-  supabaseUrl?: string;            // Custom Supabase URL
-  supabaseKey?: string;            // Custom Supabase key
+  rpcUrl?: string;                 // Custom RPC URL (optional)
 }
 
 const mavrk = new MavrkSDK(config);
@@ -94,37 +77,11 @@ const mavrk = new MavrkSDK(config);
 interface DeployTokenParams {
   name: string;                    // Token name
   symbol: string;                  // Token symbol
-  poolManagerTier?: 1 | 2 | 3;   // Optional: 1 ETH (default), 2 ETH, or 3 ETH liquidity
-  metadata: {                      // Required metadata object
-    logoBase64: string;            // Required - Base64 image data
-    coverPhotoBase64: string;      // Required - Base64 image data
-    category: string;              // Required - Token category
-    description?: string;          // Optional
-    website?: string;              // Optional
-    twitter?: string;              // Optional
-    telegram?: string;             // Optional
-    discord?: string;              // Optional
-  };
+  npm: string;                     // NonfungiblePositionManager address for chosen DEX
 }
 
 const result = await mavrk.deployToken(params);
-// Returns: { tokenAddress, poolAddress, nftTokenId, txHash }
-```
-
-### Query Token Data
-
-```typescript
-// Get single token
-const token = await mavrk.getToken('0x...');
-
-// Get all tokens
-const allTokens = await mavrk.getAllTokens();
-
-// Search tokens
-const results = await mavrk.searchTokens('bitcoin');
-
-// Get token price (USD)
-const price = await mavrk.getTokenPrice('0x...');
+// Returns: { tokenAddress, txHash }
 ```
 
 ### Lock Tokens
@@ -144,30 +101,11 @@ const txHash = await mavrk.lockTokens(params);
 ```typescript
 interface VestingParams {
   tokenAddress: string;
-  beneficiary: string;             // Who receives the tokens
   amount: bigint;                  // Total amount to vest
-  startTime: number;               // Unix timestamp
-  cliffDuration: number;           // Cliff period in seconds
-  vestingDuration: number;         // Total vesting period in seconds
+  vestingOption: 1 | 2 | 3 | 4;    // Preset options: 30, 60, 90, 180 days
 }
 
 const txHash = await mavrk.createVesting(params);
-```
-
-### Query TVL
-
-```typescript
-// Get liquidity locker TVL
-const liquidityTVL = await mavrk.getLiquidityLockerTVL();
-
-// Get token locks TVL
-const locksTVL = await mavrk.getTokenLocksTVL();
-
-// Get vested tokens TVL
-const vestingTVL = await mavrk.getVestedTokensTVL();
-
-// Get total platform TVL
-const totalTVL = await mavrk.getTotalTVL();
 ```
 
 ## Contract Addresses (Ink L2)
@@ -177,35 +115,26 @@ const totalTVL = await mavrk.getTotalTVL();
 | MavrkTokenFactory | `0xD827F74E292060D4B495b7b82d6f2470C59ce89d` |
 | MavrkTokenLocker | `0xd2C5947A6777500D9b7ad55a4D48AeF855AE6aBA` |
 | MavrkLinearVesting | `0x9496Ff7A7BE0A91F582Baa96ac12a0A36300750c` |
-| MavrkLens | `0x89C17fEBb23d78802c85B541275a5689aec5852D` |
-| MavrkSwapRouter | `0x255a501d300647134b8569Ff2772Fbdf5564a32b` |
 
 ## Important Notes
-
-### Required Fields
-- **Logo & Cover Photo**: All tokens must include a logo and cover photo (base64 encoded)
-- **Category**: Token category is required for better discoverability
-- **Pool Manager Tier**: Defaults to 1 (1 ETH liquidity) if not specified
 
 ### Gas Fees
 - **You pay gas**: Unlike mavrk.ink's gasless deployment, SDK users pay their own gas fees
 - **Why?** Gas sponsorship is specific to mavrk.ink domain via Gelato integration
 - **Contracts work the same**: All functionality is identical, just without meta-transactions
 
-### Supabase Access
-- SDK uses public read-only Supabase instance by default
-- Token metadata is automatically saved when deploying
-- Custom Supabase instances can be configured
-
 ## Examples
 
 See the `/examples` directory for complete working examples:
 
-- `deploy-token.ts` - Deploy a token with metadata
+- `deploy-token.ts` - Deploy a token with NPM selection
 - `lock-tokens.ts` - Lock tokens for a duration
-- `create-vesting.ts` - Set up a vesting schedule
-- `query-data.ts` - Query token and TVL data
-- `custom-config.ts` - Advanced configuration
+
+## Project Docs
+
+- Changelog: see `CHANGELOG.md` for recent changes
+- Contributing: see `CONTRIBUTING.md` for guidelines
+- Publishing: see `PUBLISHING.md` (maintainers only)
 
 ## Network Support
 
