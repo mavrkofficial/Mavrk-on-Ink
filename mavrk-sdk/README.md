@@ -159,3 +159,42 @@ For issues and feature requests, please use [GitHub Issues](https://github.com/m
 
 MIT © Mavrk
 
+## Mavrk Widget (Embed)
+
+You can embed the Mavrk Launch Widget in any website with a single iframe. Use the widget builder to generate a ready‑to‑paste URL:
+
+- Builder: [`mavrk.ink/widget/sample`](https://mavrk.ink/widget/sample)
+
+Minimal embed:
+
+```html
+<iframe
+  src="https://mavrk.ink/widget/launch?theme=dark&primaryColor=%237c3aed"
+  id="mavrk-launch"
+  style="width:100%;max-width:560px;min-height:720px;border:0;border-radius:12px;overflow:hidden;display:block;margin:0 auto"
+></iframe>
+
+<style>
+  @media (max-width: 600px) {
+    #mavrk-launch { max-width: 100%; min-height: auto; border-radius: 0; }
+  }
+</style>
+```
+
+Supported query parameters:
+
+- `theme`: `light` | `dark` (default: `dark`)
+- `primaryColor`: hex color for border/focus ring (labeled “Border Outlines” in the builder). Example: `%237c3aed` for `#7c3aed`
+- `backgroundColor`: container background hex (optional)
+- `buttonBackground`: button background hex (optional)
+- `inputBackground`: input background hex (optional)
+- `fontColor`: text color hex (optional)
+- `allowedDex`: `protofire` | `inkyswap` | `both` (default `both`)
+- `npm`: prefill an NPM address (optional)
+
+Notes:
+
+- The footer “Powered by Mavrk” wordmark automatically switches by theme (purple on light, white on dark).
+- The widget is isolated (Shadow DOM) and safe to place on any page without CSS conflicts.
+- The embedded widget handles wallet connection via the browser wallet (e.g., MetaMask).
+
